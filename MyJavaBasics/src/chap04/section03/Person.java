@@ -7,11 +7,10 @@ public class Person {
     private int age;
 
     //매개변수가 없는 기본 생성자
-    public void Person(){}
+    public Person(){}
 
     //매개변수가 있는 생성자
-    public void Person(String name, int age){
-        //생성과 동시에 필드 초기화
+    public Person(String name, int age) {
         this.name = name;
         this.age = age;
     }
