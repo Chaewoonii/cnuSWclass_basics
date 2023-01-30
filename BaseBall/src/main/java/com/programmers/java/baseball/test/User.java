@@ -1,4 +1,4 @@
-package com.programmers.java.baseball;
+package com.programmers.java.baseball.test;
 
 import lombok.*;
 

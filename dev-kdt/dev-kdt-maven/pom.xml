@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.programmers</groupId>
+  <artifactId>dev-kdt-maven</artifactId>
+  <version>0.0.1-RELEASE</version>
+  <!--<version>1.0-SNAPSHOT</version>-->
+  <packaging>jar</packaging>
+
+  <name>dev-kdt-maven</name>
+  <url>http://maven.apache.org</url>
+
+<!--서브 프로젝트 생성
+ 부모 주입(서브프로젝트의 pom.xml에)
+ <parent>
+    <groupId>org.programmers</groupId>
+    <artifactId>dev-kdt-maven</artifactId>
+    <version>0.0.1-RELEASE</version>
+  </parent>
+  <modules>
+    <module>service-a</module>
+    <module>service-b</module>
+  </modules>-->
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+      <!--scope: 의존성의 범위를 지정할 수 있음(classpath에 추가하냐마냐)
+          - test: test할때만 쓰인다
+          - 아무것도 지정하지 않으면 compile이 기본
+          - runtime: compile은 포함 x, 실행, 테스트시에 포함(jdbc-driver에 사용)
+          - provided: 필요시 제공. (sublet등에 사용)
+          - system: provided와 비슷. 특정 jar파일의 위치를 지정할 수 있음
+      -->
+    </dependency>
+  </dependencies>
+</project>

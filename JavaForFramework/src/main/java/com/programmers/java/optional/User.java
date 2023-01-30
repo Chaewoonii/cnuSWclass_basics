@@ -1,6 +1,8 @@
-package com.programmers.java.collectionsStudy;
+package com.programmers.java.optional;
 
 public class User {
+
+    public static User EMPTY = new User(0, "");
     private int age;
     private String name;
 
@@ -10,6 +12,7 @@ public class User {
     }
 
     public boolean isOver19(){
+        if (this == EMPTY) return false;
         return age >= 19;
     }
 

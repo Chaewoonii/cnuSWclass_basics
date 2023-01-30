@@ -1,4 +1,4 @@
-package com.programmers.java.baseball;
+package com.programmers.java.baseball.test;
 
 public class MainLombok {
     public static void main(String[] args) {
