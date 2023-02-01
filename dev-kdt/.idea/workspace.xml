@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="af24509c-1308-4d25-8c26-c93445ee087f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/CircularDepTester.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/order/MemoryOrderRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/voucher/JDBCVoucherRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/voucher/MemoryVoucherRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/FixedAmountVoucher.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/voucher/FixedAmountVoucher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/order/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/OrderContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/AppConfigurateion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/order/OrderItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/order/OrderRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/order/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/order/OrderStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/OrderTester.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/OrderTester.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/PercentDiscountVoucher.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/voucher/PercentDiscountVoucher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/Voucher.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/voucher/Voucher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/VoucherRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/voucher/VoucherRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/VoucherService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kdt-spring-order/src/main/java/org/prgrms/kdt/voucher/VoucherService.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2L7djcHU4oFQqslg2WrpxSjMVZk" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/chaeun/class_code/cnuSWclass_basics/kdt-spring-order",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="af24509c-1308-4d25-8c26-c93445ee087f" name="Changes" comment="" />
+      <created>1675226190523</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1675226190523</updated>
+      <workItem from="1675226191807" duration="17000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

@@ -1,8 +1,10 @@
-package org.prgrms.kdt;
+package org.prgrms.kdt.voucher;
+
+import org.prgrms.kdt.voucher.Voucher;
 
 import java.util.UUID;
 
-public class PercentDiscountVoucher implements Voucher{
+public class PercentDiscountVoucher implements Voucher {
 
     private final UUID voucherId;
     private final long percent;
