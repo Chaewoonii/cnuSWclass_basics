@@ -1,11 +1,9 @@
-package org.prgrms.kdt;
+package org.prgrms.kdt.configuration;
 
 import org.prgrms.kdt.order.Order;
 import org.prgrms.kdt.voucher.Voucher;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.*;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -27,10 +25,11 @@ import java.util.UUID;
 @Configuration
 
 //ComponentScan annotation을 달 경우, 해당 패키지를 스캔하여 필요한 bean을 생성해준다.
-@ComponentScan(basePackages = {"org.prgrms.kdt.order","org.prgrms.kdt.voucher"}) //베이스 페키지 명시. 에러가 발생하는 circulal클래스의 bean은 만들지 않는다.
+@ComponentScan(basePackages = {"org.prgrms.kdt.order","org.prgrms.kdt.voucher", "org.prgrms.kdt.configuration"}) //베이스 페키지 명시. 에러가 발생하는 circulal클래스의 bean은 만들지 않는다.
 //@ComponentScan(basePackageClasses = {Order.class, Voucher.class}) //Order클래스가 속한 패키지, Voucher클래스가 속한 패키지를 기준으로 찾게 된다.
 //@ComponentScan(excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION)}) //제외할 패키지를 어노테이션으로 설정
 //@ComponentScan(excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = MemoryVoucherRepository.class)}} //제외할 Bean 지정
+@PropertySource("application.properties") //.properties 파일에 작성한 property를 연동.
 public class AppConfigurateion {
 
     /*
@@ -71,4 +70,24 @@ public class AppConfigurateion {
     }
 
     */
+
+    /*
+    - initMethod = "init": Bean 생성 시 호출할 메소드를 지정. 해당 클래스 내부에 동일한 이름의 메소드가 있어야 함
+    - afterPropertiesSet() 호출 후 init()호출
+    */
+    @Bean(initMethod = "init")
+    public BeanOne beanOne(){
+        return new BeanOne();
+    }
+
+    class BeanOne implements InitializingBean{
+        public void init(){
+            System.out.println("[BeanOne] init called!");
+        }
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            System.out.println("[BeanOne] afterPropertiesSet called!");
+        }
+    }
 }

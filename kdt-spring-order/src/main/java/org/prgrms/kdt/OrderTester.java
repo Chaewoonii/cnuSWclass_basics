@@ -1,6 +1,6 @@
 package org.prgrms.kdt;
 
-import org.prgrms.kdt.AppConfigurateion;
+import org.prgrms.kdt.configuration.AppConfigurateion;
 import org.prgrms.kdt.order.OrderItem;
 import org.prgrms.kdt.order.OrderService;
 import org.prgrms.kdt.voucher.FixedAmountVoucher;
@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class OrderTester {
@@ -29,6 +30,19 @@ public class OrderTester {
         */
 
         var applicationContext = new AnnotationConfigApplicationContext(AppConfigurateion.class);
+
+        //application.properties에 작성한 property를 가져옴
+        //AppConfiguration에 @PropertySource를 알려주었기 때문에 AppConfiguration을 통해 가져옴
+        var environment = applicationContext.getEnvironment();
+        var version = environment.getProperty("kdt.version");
+        var minOrderAmount = environment.getProperty("kdt.minimum-order-amount", Integer.class); // int
+        var supportVendors = environment.getProperty("kdt.support-vendors", List.class); // list of String
+        // getProperty에 두 번째 인자로 클래스를 지정 : 해당 클래스로 변수를 가져옴. 지정하지 않을 경우 String클래스가 됨.
+
+        System.out.println(MessageFormat.format("version ->{0}", version)); //v1.0.0
+        System.out.println(MessageFormat.format("minOrderAmount ->{0}", minOrderAmount)); //1
+        System.out.println(MessageFormat.format("supportVendors ->{0}", supportVendors)); //[a, b, c, e, f, g]
+
         //고객 생성
         var customerId = UUID.randomUUID();
 
@@ -75,6 +89,17 @@ public class OrderTester {
         }}, voucher.getVoucherId());
         Assert.isTrue(order.totalAmount() == 90L, MessageFormat.format("totalAmount {0} is not 100L", order.totalAmount()));
 
+        /*Life Cycle
+        - close()메서드를 호출하면 컨테이너에 등록된 모든 빈이 소멸
 
+        Bean의 생성과 소멸에 대한 콜백
+         생성
+            1) postConstruct: @PostConstruct
+            2) afterPorpertiesSet: InitializingBean, Override
+         소멸
+            3) preDestroy: @PreDestroy
+            4) destroy: DisposableBean, Override
+         */
+        applicationContext.close();
     }
 }
