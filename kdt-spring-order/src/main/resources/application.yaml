@@ -1,0 +1,20 @@
+#YAML의 핵심은 문서 마크업이 아닌 데이터 중심에 있음
+#Yet Another Markup Language 에서 YAML Ain't Markup Language 로 변경
+#XML과 JSOM이 데이터 직렬화에 주로 쓰이기 시작하면서 YAML은 가벼운 마크업 언어로 사용
+#key는 콜론 형식으로 표기하며, 들여쓰기가 중요함. 들여쓰기 뒤에 value가 옴
+#배열은 대쉬(-)로 표현
+# | 기호로 멀티라인 사용
+# |- : -기호가 있으면 마지막에 줄바꿈이 포함되지 않음.
+#.properties의 kdt.version="v1.0"과 같음
+kdt:
+  version: "v1.0"
+  minimum-order-amount: 1
+  support-vendors:
+    - a
+    - b
+    - c
+    - d
+  description: |-
+    line 1 hello world
+    line 2 xxx
+    line 3

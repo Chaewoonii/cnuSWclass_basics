@@ -2,12 +2,21 @@ package org.prgrms.kdt.order;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
 import java.util.List;
 
-@Component
+//@Component
+@Configuration
+@ConfigurationProperties(prefix = "kdt") // 필드 위에 붙은 @Value~ 다 지울 수 있음.
+//사용한 이후 supportVendors의 property가 list로 잘 들어옴.
+//yaml파일의 kdt 하위의 property를 클래스의 필드에 바인딩. 바인딩되려면 getter, setter를 만들어줘야 함.
+//ConfigurationProperties: 스프링 부트에서 옴. AppConfiguration에 @EnableConfigurationProperties 어노테이션을 달아야 함
+//큰 프로젝트에서 속성이 다양할 때, 그룹화를 시킬 때 사용
+//쓰고자하는 곳에서 주입받아 사용. properties를 클래스화시켜 하나의 type로 정의한 다음 property를 사용하는 쪽에서 주입받아 사용.
 public class OrderProperties implements InitializingBean {
 
     /*
@@ -32,14 +41,16 @@ public class OrderProperties implements InitializingBean {
         시스템 환경변수의 값이 반환된다. 즉, 시스템 환경변수가 property 보다 더 높은 우선순위에 있다.
     */
     //@Value("v1.1.1") //직접 지정
-    @Value("${kdt.version3:v0.0.0}") //property를 가져옴
+//    @Value("${kdt.version3:v0.0.0}") //property를 가져옴
     private String version;
 
-    @Value("${kdt.minimum-order-amount}")
+//    @Value("${kdt.minimum-order-amount}")
     private int minimumOrderAmount;
 
-    @Value("${kdt.support-vendors}")
+//    @Value("${kdt.support-vendors}")
     private List<String> supportVendors;
+
+    private String description;
 
     @Value("${JAVA_HOME}")
     private String javaHome;
@@ -52,5 +63,37 @@ public class OrderProperties implements InitializingBean {
         System.out.println(MessageFormat.format("minimumOrderAmount -> {0}", minimumOrderAmount));
         System.out.println(MessageFormat.format("supportVendors -> {0}", supportVendors));
         System.out.println(MessageFormat.format("javaHome -> {0}", javaHome));
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public int getMinimumOrderAmount() {
+        return minimumOrderAmount;
+    }
+
+    public List<String> getSupportVendors() {
+        return supportVendors;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public void setMinimumOrderAmount(int minimumOrderAmount) {
+        this.minimumOrderAmount = minimumOrderAmount;
+    }
+
+    public void setSupportVendors(List<String> supportVendors) {
+        this.supportVendors = supportVendors;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

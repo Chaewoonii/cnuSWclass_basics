@@ -2,6 +2,7 @@ package org.prgrms.kdt;
 
 import org.prgrms.kdt.configuration.AppConfigurateion;
 import org.prgrms.kdt.order.OrderItem;
+import org.prgrms.kdt.order.OrderProperties;
 import org.prgrms.kdt.order.OrderService;
 import org.prgrms.kdt.voucher.FixedAmountVoucher;
 import org.prgrms.kdt.voucher.VoucherRepository;
@@ -38,10 +39,21 @@ public class OrderTester {
         var minOrderAmount = environment.getProperty("kdt.minimum-order-amount", Integer.class); // int
         var supportVendors = environment.getProperty("kdt.support-vendors", List.class); // list of String
         // getProperty에 두 번째 인자로 클래스를 지정 : 해당 클래스로 변수를 가져옴. 지정하지 않을 경우 String클래스가 됨.
+        var description = environment.getProperty("kdt.description", List.class);
 
         System.out.println(MessageFormat.format("version ->{0}", version)); //v1.0.0
         System.out.println(MessageFormat.format("minOrderAmount ->{0}", minOrderAmount)); //1
         System.out.println(MessageFormat.format("supportVendors ->{0}", supportVendors)); //[a, b, c, e, f, g]
+        System.out.println(MessageFormat.format("description ->{0}", description)); //
+
+        //yaml과 ConfigurationProperties를 사용, properties를 하나의 클래스로 정의, 필요 시 주입받아 사용하고자 하는 경우
+        var orderProperties =  applicationContext.getBean(OrderProperties.class);
+        System.out.println(MessageFormat.format("version ->{0}", orderProperties.getVersion())); //v1.0.0
+        System.out.println(MessageFormat.format("minOrderAmount ->{0}", orderProperties.getMinimumOrderAmount())); //1
+        System.out.println(MessageFormat.format("supportVendors ->{0}", orderProperties.getSupportVendors())); //[a, b, c, e, f, g]
+        System.out.println(MessageFormat.format("description ->{0}", orderProperties.getDescription())); // line 1 hello world! ...
+
+
 
         //고객 생성
         var customerId = UUID.randomUUID();
