@@ -5,18 +5,21 @@ import org.prgrms.kdt.order.OrderItem;
 import org.prgrms.kdt.order.OrderProperties;
 import org.prgrms.kdt.order.OrderService;
 import org.prgrms.kdt.voucher.FixedAmountVoucher;
+import org.prgrms.kdt.voucher.JDBCVoucherRepository;
 import org.prgrms.kdt.voucher.VoucherRepository;
 import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class OrderTester {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         /*//annotaionContext로부터 Bean을 생성해 orderService를 만듦.
         var applicationContext = new AnnotationConfigApplicationContext(AppConfigurateion.class);
 
@@ -30,11 +33,20 @@ public class OrderTester {
         Assert.isTrue(order.totalAmount() == 100L, MessageFormat.format("totalAmount {0} is not 90L", order.totalAmount()));
         */
 
-        var applicationContext = new AnnotationConfigApplicationContext(AppConfigurateion.class);
+//        var applicationContext = new AnnotationConfigApplicationContext(AppConfigurateion.class);
+        var applicationContext = new AnnotationConfigApplicationContext();
+        applicationContext.register(AppConfigurateion.class);
 
         //application.properties에 작성한 property를 가져옴
         //AppConfiguration에 @PropertySource를 알려주었기 때문에 AppConfiguration을 통해 가져옴
         var environment = applicationContext.getEnvironment();
+
+        //profile: 특징이나 공통점을 찾아 그룹화
+        //예: 30대 남성
+        environment.setActiveProfiles("local"); // JDBCVoucherRepository 의 Profile 로 지정한 "dev"라는 프로파일을 가져옴
+        applicationContext.refresh(); //"dev"라는 프로파일을 제대로 적용하도록 refresh
+
+        /*
         var version = environment.getProperty("kdt.version");
         var minOrderAmount = environment.getProperty("kdt.minimum-order-amount", Integer.class); // int
         var supportVendors = environment.getProperty("kdt.support-vendors", List.class); // list of String
@@ -52,8 +64,25 @@ public class OrderTester {
         System.out.println(MessageFormat.format("minOrderAmount ->{0}", orderProperties.getMinimumOrderAmount())); //1
         System.out.println(MessageFormat.format("supportVendors ->{0}", orderProperties.getSupportVendors())); //[a, b, c, e, f, g]
         System.out.println(MessageFormat.format("description ->{0}", orderProperties.getDescription())); // line 1 hello world! ...
+        */
 
+        //리소스 가져오기
+        //classpath에서 가져오라고 지정. classpath를 지정하지 않아도 default로 classpath에서 가져옴
+        var resource = applicationContext.getResource("classpath: application.yaml");
+        System.out.println(MessageFormat.format("Resource -> {0}", resource.getClass().getCanonicalName())); //어떤 구현체를 가져오는지 확인
+        //org.springframework.core.io.DefaultResourceLoader.ClassPathContextResource
+        var file = resource.getFile(); //가져온 resource의 내용을 읽음
+        var strings = Files.readAllLines(file.toPath()); // 한줄씩 잘라서 list로 가져옴
+        System.out.println(strings.stream().reduce("", (a, b) -> a + "\n" + b)); //리스트를 붙여서 문자열로.
 
+        //working directory를 기준으로 찾음. 최상위의 kdt-spring-order 파일 아래. test파일 아래 sample.txt가져옴
+        var resoucrce2 = applicationContext.getResource("file:test/sample.txt");
+        System.out.println(MessageFormat.format("resoucrce2 -> {0}", resoucrce2.getClass().getCanonicalName()));
+        var strings2 = Files.readAllLines(resoucrce2.getFile().toPath());
+        System.out.println(strings2.stream().reduce("", (a, b) -> a + "\n" + b));
+
+        //인터넷 url로 가져올수도 있음
+        var resource3 = applicationContext.getResource("https://stackoverflow.com/");
 
         //고객 생성
         var customerId = UUID.randomUUID();
@@ -68,8 +97,8 @@ public class OrderTester {
         var voucherRepository = applicationContext.getBean(VoucherRepository.class);
 
                                                                       applicationContext가 아닌 BeanFactory를 요구                            qualifier 지정  */
-        var voucherRepository = BeanFactoryAnnotationUtils.qualifiedBeanOfType(applicationContext.getBeanFactory(), VoucherRepository.class, "memory");
-
+//        var voucherRepository = BeanFactoryAnnotationUtils.qualifiedBeanOfType(applicationContext.getBeanFactory(), VoucherRepository.class, "memory");
+        var voucherRepository = applicationContext.getBean(VoucherRepository.class);
         /*
           싱글톤 패턴
            : 생성자가 여러 차례 호출되더라도 최초의 생성자가 생성한 객체를 리턴. 실제로 생성되는 객체는 단 하나.
@@ -94,6 +123,11 @@ public class OrderTester {
 
         //바우처 생성
         var voucher = voucherRepository.insert(new FixedAmountVoucher(UUID.randomUUID(), 10L));
+
+        //environment.setActiveProfiles("dev");로 JDBCVoucherRepository를 잘 가져왔는지 확인
+        System.out.println(MessageFormat.format("is JDBC Repo -> {0}", voucherRepository instanceof JDBCVoucherRepository));
+        System.out.println(MessageFormat.format("is JDBC Repo -> {0}", voucherRepository.getClass().getCanonicalName()));
+
         //오더서비스 객체 생성
         var orderService = applicationContext.getBean(OrderService.class);
         var order = orderService.createOrder(customerId, new ArrayList<OrderItem>(){{

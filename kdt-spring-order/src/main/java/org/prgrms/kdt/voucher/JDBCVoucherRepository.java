@@ -1,6 +1,7 @@
 package org.prgrms.kdt.voucher;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 //메모리에서 관리되는 repository
 @Repository
-@Qualifier("jdbc")
+@Profile("dev") //ApplicationContext 에 @Bean, @Profile로도 정의할 수 있음.
 public class JDBCVoucherRepository implements VoucherRepository {
 
     //메모리에서 관리: 해시맵 사용. thread-safety를 위해 Concurrency를 사용

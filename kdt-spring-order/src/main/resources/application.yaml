@@ -6,6 +6,21 @@
 # | 기호로 멀티라인 사용
 # |- : -기호가 있으면 마지막에 줄바꿈이 포함되지 않음.
 #.properties의 kdt.version="v1.0"과 같음
+# ---을 구분으로 한 개의 파일에 여러 개의 yaml을 정의할 수 있음.
+
+
+# 첫 번째로는 여러 프로파일에 관련 없이 공통적으로 사용되는 것을 적음. 모든 프로파일에서 사용되기 위함.
+# 어떤 profile에 종속되지 않고 모든 프로파일에 사용
+# 공통적용
+servers:
+  - dev.bar.com
+  - foo.bar.com
+
+
+---
+# local profile에 적용
+#spring.config.activate.on-profile 은 SpringBoot에서 지원하는 기능. SpringBoot에서 동작함.
+spring.config.activate.on-profile: local
 kdt:
   version: "v1.0"
   minimum-order-amount: 1
@@ -18,3 +33,18 @@ kdt:
     line 1 hello world
     line 2 xxx
     line 3
+
+---
+# dev profile에 적용
+spring.config.activate.on-profile: dev
+kdt:
+  version: "v1.0-dev"
+  minimum-order-amount: 1
+  support-vendors:
+    - dev-a
+    - dev-b
+    - dev-c
+    - dev-d
+  description: |-
+    dev
+    dev
