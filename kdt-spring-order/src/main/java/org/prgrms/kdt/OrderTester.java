@@ -11,12 +11,16 @@ import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.util.Assert;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.channels.Channels;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class OrderTester {
     public static void main(String[] args) throws IOException {
@@ -68,7 +72,7 @@ public class OrderTester {
 
         //리소스 가져오기
         //classpath에서 가져오라고 지정. classpath를 지정하지 않아도 default로 classpath에서 가져옴
-        var resource = applicationContext.getResource("classpath: application.yaml");
+        var resource = applicationContext.getResource("classpath:application.yaml");
         System.out.println(MessageFormat.format("Resource -> {0}", resource.getClass().getCanonicalName())); //어떤 구현체를 가져오는지 확인
         //org.springframework.core.io.DefaultResourceLoader.ClassPathContextResource
         var file = resource.getFile(); //가져온 resource의 내용을 읽음
@@ -83,6 +87,12 @@ public class OrderTester {
 
         //인터넷 url로 가져올수도 있음
         var resource3 = applicationContext.getResource("https://stackoverflow.com/");
+        //url이기때문에 getURL. stream을 통해 다운받을 수 있게 해야함. >>> Channel 사용
+        var readableByteChannel = Channels.newChannel(resource3.getURL().openStream());
+        var bufferReader = new BufferedReader(Channels.newReader(readableByteChannel, StandardCharsets.UTF_8));
+        var contents = bufferReader.lines().collect(Collectors.joining("\n")); //개행 문자 삽입
+        System.out.println(contents);
+
 
         //고객 생성
         var customerId = UUID.randomUUID();
