@@ -1,5 +1,7 @@
 package org.prgrms.kdt.order;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -18,6 +20,8 @@ import java.util.List;
 //큰 프로젝트에서 속성이 다양할 때, 그룹화를 시킬 때 사용
 //쓰고자하는 곳에서 주입받아 사용. properties를 클래스화시켜 하나의 type로 정의한 다음 property를 사용하는 쪽에서 주입받아 사용.
 public class OrderProperties implements InitializingBean {
+
+    private final static Logger logger = LoggerFactory.getLogger(OrderProperties.class);
 
     /*
     - @Value: 생성자를 통해 필드를 초기화하지 않아도 값이 주입됨
@@ -59,10 +63,10 @@ public class OrderProperties implements InitializingBean {
     //InitializingBean 통해 객체 생성 시 필드에 접근해서 정보를 얻음
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println(MessageFormat.format("version -> {0}", version));
-        System.out.println(MessageFormat.format("minimumOrderAmount -> {0}", minimumOrderAmount));
-        System.out.println(MessageFormat.format("supportVendors -> {0}", supportVendors));
-        System.out.println(MessageFormat.format("javaHome -> {0}", javaHome));
+        logger.debug("version -> {}", version);
+        logger.debug("minimumOrderAmount -> {}", minimumOrderAmount);
+        logger.debug("supportVendors -> {}", supportVendors);
+        logger.debug("javaHome -> {}", javaHome);
     }
 
     public String getVersion() {

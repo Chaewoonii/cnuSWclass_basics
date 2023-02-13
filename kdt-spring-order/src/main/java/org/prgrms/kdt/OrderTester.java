@@ -1,5 +1,6 @@
 package org.prgrms.kdt;
 
+import org.apache.logging.log4j.message.Message;
 import org.prgrms.kdt.configuration.AppConfigurateion;
 import org.prgrms.kdt.order.OrderItem;
 import org.prgrms.kdt.order.OrderProperties;
@@ -7,7 +8,8 @@ import org.prgrms.kdt.order.OrderService;
 import org.prgrms.kdt.voucher.FixedAmountVoucher;
 import org.prgrms.kdt.voucher.JDBCVoucherRepository;
 import org.prgrms.kdt.voucher.VoucherRepository;
-import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.util.Assert;
 
@@ -18,12 +20,23 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class OrderTester {
+
+    /*
+     - 로거 생성. getLogger()에 이름 전달해야함. 보통 패키지명 포함해 전달.
+     - getLogger(this.getClass())나 getLogger(클래스.class)로 많이 사용
+     - 매 인스턴스마다 로거를 생성하는 것이 아니라 해당 클래스의 로거는 단 하나(static final)
+     - 패키지마다 로그 레벨을 설정: 설정파일에서 설정.
+
+      */
+    private static final Logger logger = LoggerFactory.getLogger(OrderTester.class);
+
     public static void main(String[] args) throws IOException {
+
+
         /*//annotaionContext로부터 Bean을 생성해 orderService를 만듦.
         var applicationContext = new AnnotationConfigApplicationContext(AppConfigurateion.class);
 
@@ -70,6 +83,16 @@ public class OrderTester {
         System.out.println(MessageFormat.format("description ->{0}", orderProperties.getDescription())); // line 1 hello world! ...
         */
 
+        //로그 출력.
+        var orderProperties = applicationContext.getBean(OrderProperties.class);
+        logger.info("logger name -> {}", logger.getName()); //org.prgrms.kdt.OrderTester 패키지이름+클래스명까지.
+        logger.info("version -> {}", orderProperties.getVersion());
+        logger.info("minOrderAmount -> {}", orderProperties.getMinimumOrderAmount());
+        logger.info("supportVendors -> {}", orderProperties.getSupportVendors());
+        logger.info("description -> {}", orderProperties.getDescription());
+
+        /*
+
         //리소스 가져오기
         //classpath에서 가져오라고 지정. classpath를 지정하지 않아도 default로 classpath에서 가져옴
         var resource = applicationContext.getResource("classpath:application.yaml");
@@ -92,7 +115,7 @@ public class OrderTester {
         var bufferReader = new BufferedReader(Channels.newReader(readableByteChannel, StandardCharsets.UTF_8));
         var contents = bufferReader.lines().collect(Collectors.joining("\n")); //개행 문자 삽입
         System.out.println(contents);
-
+        */
 
         //고객 생성
         var customerId = UUID.randomUUID();
