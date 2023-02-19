@@ -28,7 +28,7 @@ import org.springframework.context.annotation.*;
 //@PropertySource("application.yaml") //.properties 파일에 작성한 property를 연동
 @PropertySource(value = "application.yaml", factory = YamlPropertiesFactory.class) //Spring Boot는 yaml을 지원, Spring framework는 yaml을 지원하지 않음. factory를 만들어 전달해야함.
 @EnableConfigurationProperties //ConfigurationProperties: 스프링 부트에서부터 온 것임을 알려줌.
-public class AppConfigurateion {
+public class AppConfiguration {
 
     /*
     해당 클래스에 @Repository로 인해 bean이 자동 생성된다.

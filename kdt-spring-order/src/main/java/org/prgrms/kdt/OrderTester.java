@@ -1,7 +1,6 @@
 package org.prgrms.kdt;
 
-import org.apache.logging.log4j.message.Message;
-import org.prgrms.kdt.configuration.AppConfigurateion;
+import org.prgrms.kdt.configuration.AppConfiguration;
 import org.prgrms.kdt.order.OrderItem;
 import org.prgrms.kdt.order.OrderProperties;
 import org.prgrms.kdt.order.OrderService;
@@ -13,15 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.util.Assert;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.channels.Channels;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class OrderTester {
 
@@ -52,7 +46,7 @@ public class OrderTester {
 
 //        var applicationContext = new AnnotationConfigApplicationContext(AppConfigurateion.class);
         var applicationContext = new AnnotationConfigApplicationContext();
-        applicationContext.register(AppConfigurateion.class);
+        applicationContext.register(AppConfiguration.class);
 
         //application.properties에 작성한 property를 가져옴
         //AppConfiguration에 @PropertySource를 알려주었기 때문에 AppConfiguration을 통해 가져옴
