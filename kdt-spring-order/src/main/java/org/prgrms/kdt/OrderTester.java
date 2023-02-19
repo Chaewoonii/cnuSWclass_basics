@@ -34,7 +34,7 @@ public class OrderTester {
       */
     private static final Logger logger = LoggerFactory.getLogger(OrderTester.class);
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
 
 
         /*//annotaionContext로부터 Bean을 생성해 orderService를 만듦.

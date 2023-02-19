@@ -15,8 +15,7 @@ import java.util.UUID;
 @ComponentScan(basePackages = {"org.prgrms.kdt.order","org.prgrms.kdt.voucher", "org.prgrms.kdt.configuration"}) //AppConfiguration 에서 가져옴
 public class KdtApplication {
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args){
 		//SpringApplication.run(KdtApplication.class, args);
 		// - 위의 코드를 아래와 같이 변경하여 profile 지정
 		var springApplication = new SpringApplication(KdtApplication.class);
