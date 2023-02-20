@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+	<!--dependencies 우클릭 > diagrams > show dependencies : 현재 프로젝트의 의존성을 볼 수 있음-->
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

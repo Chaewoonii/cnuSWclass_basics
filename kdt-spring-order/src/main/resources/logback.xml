@@ -1,27 +1,98 @@
-<!--https://logback.qos.ch/manual/configuration.html-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--https://docs.spring.io/spring-boot/docs/2.5.1/reference/htmlsingle/#howto.logging.logback
+    - Spring Boot Reference Document  10.7.1 -> "How to" Guides -> Logging - > Configure Logback for Logging
+    - 스프링 부트의 logback을 상속받아 사용.
+-->
+
 <configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+    <logger name="org.springframework.web" level="DEBUG"/>
+</configuration>
 
-    <property name="CONSOLE_LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n" />
 
-    <!--
+
+
+<!--
+&lt;!&ndash;https://logback.qos.ch/manual/configuration.html&ndash;&gt;
+<configuration>
+    &lt;!&ndash;log color 변경
+        - pattern에 %clr(){color}형태로 추가
+        - %clr(%d{HH:mm:ss.SSS}){red}: 시간:분:초 를 빨간색으로 출력.
+        - main에 AnsiOutput.setEnabled(AnsiOutput.Enabled.ALWAYS); 추가: 컬러 변경 허용 설정.
+        - %clr(%-5level): 기본 green, warn과 error일 때는 색이 바뀜
+    &ndash;&gt;
+    <conversionRule
+            conversionWord="clr"
+            converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    &lt;!&ndash;
+        https://logback.qos.ch/manual/layouts.html
+        Conversion Word: 시간, 쓰레드, 객체 등을 conversion word를 통해 문자열로 변환
+
+        %-5level
+          * 양수: 오른쪽 정렬(Left pad)
+          * 음수: 왼쪽 정렬(Right pad)
+        logger{36}: 로거 이름을 최대 36자까지 출력
+    &ndash;&gt;
+    <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{HH:mm:ss.SSS}){cyan} [%thread] %clr(%-5level) %logger{36} -%kvp- %msg%n" />
+    <property name="FILE_LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n" />
+
+    &lt;!&ndash;time stamp 설정, 그 time stamp마다 로그 파일 새로 생성.
+        로그를 한 파일에 기록하면 파일이 너무 커지기 때문에 분할
+        대체로 일별로 분할
+    &ndash;&gt;
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" />
+
+    &lt;!&ndash;
       - 어디에 어떤 포맷으로 로그를 남길지 설정.
       - ConsoleAppender 는 콘솔에 남기는 것.
       - 콘솔/파일/db에 남길 수 있음
-    -->
+    &ndash;&gt;
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <!-- encoders are assigned the type
-             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        &lt;!&ndash; encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default &ndash;&gt;
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <!--로거 생성. kdt아래의 모든 log의 level 지정-->
-    <logger name="org.prgrms.kdt" level="info" additivity="false">
-        <appender-ref ref="STDOUT"/> <!--appender는 중첩됨. additivity=false로 중첩방지. -->
+&lt;!&ndash;    <appender name="FILE" class="ch.qos.logback.core.FileAppender">&ndash;&gt;
+&lt;!&ndash;        <file>logs/kdt${bySecond}.log</file> &lt;!&ndash;위에서 설정한 time stamp에 따라 파일 이름 설정&ndash;&gt;&ndash;&gt;
+&lt;!&ndash;        <append>false</append> &lt;!&ndash;log 파일에 매 실행마다 로그 추가하냐 마냐&ndash;&gt;&ndash;&gt;
+&lt;!&ndash;        <encoder>&ndash;&gt;
+&lt;!&ndash;            <pattern>${FILE_LOG_PATTERN}</pattern>&ndash;&gt;
+&lt;!&ndash;        </encoder>&ndash;&gt;
+&lt;!&ndash;    </appender>&ndash;&gt;
+
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/access.log</file>
+        &lt;!&ndash;
+        <file>logs/access.log</file>가 있는 경우
+            - access.log 파일을 주면 access.log 파일에 해당 날짜의 로그만 기록된다.
+            - 1일에서 2일로 넘어가면, access.log 파일에는 2일의 정보만 남음(최신 정보)
+
+        <file>logs/access.log</file>가 없는 경우
+            - access-2023-02-14.log 파일이 날짜(지정된 타임 스탬프)별로 생성, 기록된다.
+        &ndash;&gt;
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> &lt;!&ndash;시간 지나면 알아서 파일 만들어줌&ndash;&gt;
+            <fileNamePattern>logs/access-%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    &lt;!&ndash;로거 생성. kdt아래의 모든 log의 level 지정&ndash;&gt;
+    <logger name="org.prgrms.kdt" additivity="false">
+        <level value="info" />
+        <appender-ref ref="ROLLING_FILE"/> &lt;!&ndash;appender는 중첩됨. additivity=false로 중첩방지. &ndash;&gt;
     </logger>
 
-    <root level="debug"> <!--프로그램에서 사용되는 모든 로그들의 레벨-->
+    <root level="debug"> &lt;!&ndash;프로그램에서 사용되는 모든 로그들의 레벨&ndash;&gt;
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>
+-->

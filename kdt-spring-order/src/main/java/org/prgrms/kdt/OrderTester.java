@@ -9,6 +9,7 @@ import org.prgrms.kdt.voucher.JDBCVoucherRepository;
 import org.prgrms.kdt.voucher.VoucherRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.util.Assert;
 
@@ -28,8 +29,8 @@ public class OrderTester {
       */
     private static final Logger logger = LoggerFactory.getLogger(OrderTester.class);
 
-    public static void main(String[] args) throws IOException{
-
+    public static void main(String[] args) throws IOException {
+        AnsiOutput.setEnabled(AnsiOutput.Enabled.ALWAYS); //log 컬러 변경 허용 설정
 
         /*//annotaionContext로부터 Bean을 생성해 orderService를 만듦.
         var applicationContext = new AnnotationConfigApplicationContext(AppConfigurateion.class);
@@ -76,15 +77,15 @@ public class OrderTester {
         System.out.println(MessageFormat.format("supportVendors ->{0}", orderProperties.getSupportVendors())); //[a, b, c, e, f, g]
         System.out.println(MessageFormat.format("description ->{0}", orderProperties.getDescription())); // line 1 hello world! ...
         */
-
+        System.out.println("*********************************************");
         //로그 출력.
         var orderProperties = applicationContext.getBean(OrderProperties.class);
-        logger.info("logger name -> {}", logger.getName()); //org.prgrms.kdt.OrderTester 패키지이름+클래스명까지.
-        logger.info("version -> {}", orderProperties.getVersion());
-        logger.info("minOrderAmount -> {}", orderProperties.getMinimumOrderAmount());
-        logger.info("supportVendors -> {}", orderProperties.getSupportVendors());
-        logger.info("description -> {}", orderProperties.getDescription());
-
+        logger.debug("logger name -> {}", logger.getName()); //org.prgrms.kdt.OrderTester 패키지이름+클래스명까지.
+        logger.warn("version -> {}", orderProperties.getVersion());
+        logger.warn("minOrderAmount -> {}", orderProperties.getMinimumOrderAmount());
+        logger.error("supportVendors -> {}", orderProperties.getSupportVendors());
+        logger.error("description -> {}", orderProperties.getDescription());
+        System.out.println("*********************************************");
         /*
 
         //리소스 가져오기

@@ -4,9 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
@@ -43,7 +41,6 @@ public class MemoryVoucherRepository implements VoucherRepository, InitializingB
     public void postConstruct(){
         System.out.println("postConstruct called!");
     }
-
 
     //InitializingBean, 생성콜백 2
     @Override
