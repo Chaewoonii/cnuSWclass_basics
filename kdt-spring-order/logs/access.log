@@ -1,0 +1,33 @@
+12:50:29.191 [main] INFO  org.prgrms.kdt.KdtApplicationTests -- Starting KdtApplicationTests using Java 17.0.5 with PID 11368 (started by user in C:\chaeun\class_code\cnuSWclass_basics\kdt-spring-order)
+12:50:29.198 [main] INFO  org.prgrms.kdt.KdtApplicationTests -- No active profile set, falling back to 1 default profile: "default"
+12:50:56.959 [main] INFO  org.prgrms.kdt.KdtApplicationTests -- Starting KdtApplicationTests using Java 17.0.5 with PID 12992 (started by user in C:\chaeun\class_code\cnuSWclass_basics\kdt-spring-order)
+12:50:56.960 [main] INFO  org.prgrms.kdt.KdtApplicationTests -- No active profile set, falling back to 1 default profile: "default"
+13:07:42.842 [main] INFO  org.prgrms.kdt.KdtApplicationTests -- Starting KdtApplicationTests using Java 17.0.5 with PID 11260 (started by user in C:\chaeun\class_code\cnuSWclass_basics\kdt-spring-order)
+13:07:42.843 [main] INFO  org.prgrms.kdt.KdtApplicationTests -- No active profile set, falling back to 1 default profile: "default"
+13:13:38.680 [main] INFO  org.prgrms.kdt.KdtApplicationTests -- Starting KdtApplicationTests using Java 17.0.5 with PID 9496 (started by user in C:\chaeun\class_code\cnuSWclass_basics\kdt-spring-order)
+13:13:38.681 [main] INFO  org.prgrms.kdt.KdtApplicationTests -- No active profile set, falling back to 1 default profile: "default"
+13:14:39.863 [main] INFO  org.prgrms.kdt.KdtApplicationTests -- Starting KdtApplicationTests using Java 17.0.5 with PID 4916 (started by user in C:\chaeun\class_code\cnuSWclass_basics\kdt-spring-order)
+13:14:39.865 [main] INFO  org.prgrms.kdt.KdtApplicationTests -- No active profile set, falling back to 1 default profile: "default"
+13:27:54.448 [main] INFO  org.prgrms.kdt.KdtApplicationTests -- Starting KdtApplicationTests using Java 17.0.5 with PID 3616 (started by user in C:\chaeun\class_code\cnuSWclass_basics\kdt-spring-order)
+13:27:54.449 [main] INFO  org.prgrms.kdt.KdtApplicationTests -- No active profile set, falling back to 1 default profile: "default"
+14:02:11.996 [main] INFO  org.prgrms.kdt.KdtApplication -- Starting KdtApplication using Java 17.0.5 with PID 2180 (C:\chaeun\class_code\cnuSWclass_basics\kdt-spring-order\target\classes started by user in C:\chaeun\class_code\cnuSWclass_basics\kdt-spring-order)
+14:02:11.998 [main] INFO  org.prgrms.kdt.KdtApplication -- The following 1 profile is active: "local"
+14:02:12.521 [main] INFO  org.prgrms.kdt.KdtApplication -- Started KdtApplication in 1.043 seconds (process running for 2.048)
+14:02:12.525 [main] WARN  org.prgrms.kdt.KdtApplication -- version -> v1.0-local
+14:02:12.526 [main] WARN  org.prgrms.kdt.KdtApplication -- minOrderAmount -> 0
+14:02:12.526 [main] ERROR org.prgrms.kdt.KdtApplication -- supportVendors -> [a]
+14:02:12.526 [main] ERROR org.prgrms.kdt.KdtApplication -- description -> line 1
+14:04:06.749 [main] INFO  org.prgrms.kdt.KdtApplication -- Starting KdtApplication using Java 17.0.5 with PID 10512 (C:\chaeun\class_code\cnuSWclass_basics\kdt-spring-order\target\classes started by user in C:\chaeun\class_code\cnuSWclass_basics\kdt-spring-order)
+14:04:06.752 [main] INFO  org.prgrms.kdt.KdtApplication -- The following 1 profile is active: "local"
+14:04:07.308 [main] INFO  org.prgrms.kdt.KdtApplication -- Started KdtApplication in 1.111 seconds (process running for 2.087)
+14:04:07.312 [main] WARN  org.prgrms.kdt.KdtApplication -- version -> v1.0-local
+14:04:07.313 [main] WARN  org.prgrms.kdt.KdtApplication -- minOrderAmount -> 0
+14:04:07.313 [main] ERROR org.prgrms.kdt.KdtApplication -- supportVendors -> [a]
+14:04:07.313 [main] ERROR org.prgrms.kdt.KdtApplication -- description -> line 1
+14:07:35.158 [main] INFO  org.prgrms.kdt.KdtApplication -- Starting KdtApplication using Java 17.0.5 with PID 2084 (C:\chaeun\class_code\cnuSWclass_basics\kdt-spring-order\target\classes started by user in C:\chaeun\class_code\cnuSWclass_basics\kdt-spring-order)
+14:07:35.160 [main] INFO  org.prgrms.kdt.KdtApplication -- The following 1 profile is active: "local"
+14:07:35.805 [main] INFO  org.prgrms.kdt.KdtApplication -- Started KdtApplication in 1.371 seconds (process running for 2.495)
+14:07:35.808 [main] WARN  org.prgrms.kdt.KdtApplication -- version -> v1.0-local
+14:07:35.810 [main] WARN  org.prgrms.kdt.KdtApplication -- minOrderAmount -> 0
+14:07:35.810 [main] ERROR org.prgrms.kdt.KdtApplication -- supportVendors -> [a]
+14:07:35.810 [main] ERROR org.prgrms.kdt.KdtApplication -- description -> line 1

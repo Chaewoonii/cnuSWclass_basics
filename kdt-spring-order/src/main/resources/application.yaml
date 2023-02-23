@@ -21,6 +21,13 @@ servers:
 # local profile에 적용
 #spring.config.activate.on-profile 은 SpringBoot에서 지원하는 기능. SpringBoot에서 동작함.
 spring.config.activate.on-profile: local
+
+#로그 레벨 설정
+#https://docs.spring.io/spring-boot/docs/2.5.1/reference/htmlsingle/#howto.logging
+logging:
+  level:
+    root: warn
+
 kdt:
   version: "v1.0"
   minimum-order-amount: 1
