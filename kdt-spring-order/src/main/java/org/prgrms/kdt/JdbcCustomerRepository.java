@@ -3,6 +3,7 @@ package org.prgrms.kdt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,11 @@ public class JdbcCustomerRepository {
     private final String DELETE_ALL_SQL = "DELETE FROM customers";
     private final String UPDATE_SQL = "UPDATE customers SET name = ? WHERE customer_id = UUID_TO_BIN(?)";
 
+    static UUID toUUID(byte[] bytes){
+        //nameUUIDFromBytes 가 UUID 3이기 때문에 아래와 같이 변경.
+        var byteBuffer = ByteBuffer.wrap(bytes);
+        return new UUID(byteBuffer.getLong(), byteBuffer.getLong()); //64비트씩 쪼개서 가져와 넣어준다.
+    }
 
        /* Connection connection = null;
         Statement statement = null;
@@ -81,7 +87,8 @@ public class JdbcCustomerRepository {
             try(var resultSet = statement.executeQuery()){
                 while (resultSet.next()){
                     var customerName = resultSet.getString("name");
-                    var customerId = UUID.nameUUIDFromBytes(resultSet.getBytes("customer_id"));
+//                    var customerId = UUID.nameUUIDFromBytes(resultSet.getBytes("customer_id"));
+                    var customerId = toUUID(resultSet.getBytes("customer_id"));
                     var createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
                     logger.info("customer id -> {}, customerName -> {}, createdAt -> {}", customerId, customerName, createdAt);
                     names.add(customerName);
@@ -105,7 +112,7 @@ public class JdbcCustomerRepository {
                     var customerName = resultSet.getString("name");
                     var customerId = UUID.nameUUIDFromBytes(resultSet.getBytes("customer_id"));
                     var createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
-                    logger.info("customer id -> {}, customerName -> {}, createdAt -> {}", customerId, customerName, createdAt);
+//                    logger.info("customer id -> {}, customerName -> {}, createdAt -> {}", customerId, customerName, createdAt);
                     names.add(customerName);
                 }
             }
@@ -114,6 +121,26 @@ public class JdbcCustomerRepository {
         }
 
         return names;
+    }
+
+    public List<UUID> findAllIds(){
+        List<UUID> uuids = new ArrayList<>();
+        try(
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/order_mgmt", "root", "test1234@#");
+                var statement = connection.prepareStatement(SELECT_ALL_SQL);
+        ){
+            try(var resultSet = statement.executeQuery()){
+                while (resultSet.next()){
+                    var customerId = toUUID(resultSet.getBytes("customer_id"));
+//                    logger.info("customer id -> {}, customerName -> {}, createdAt -> {}", customerId, customerName, createdAt);
+                    uuids.add(customerId);
+                }
+            }
+        }catch(SQLException throwable){
+            logger.error("Got error while closing connection", throwable);
+        }
+
+        return uuids;
     }
 
     public int instertCustomer(UUID customerId, String name, String email){
@@ -181,14 +208,20 @@ public class JdbcCustomerRepository {
 //        insert
         customerRepository.instertCustomer(UUID.randomUUID(), "new-user", "new_user@gmail.com");
 
-//        update
-        var customer2 = UUID.randomUUID();
-        customerRepository.instertCustomer(customer2, "new-user02", "new_user02@gmail.com");
-
-        customerRepository.findAllName().forEach(v -> logger.info("Found name: {}", v));
-        customerRepository.updateCustomerName(customer2, "updated-user2");
+        var customerId = UUID.randomUUID();
+        logger.info("created Id -> {}", customerId); //2fcd04d9-3ddb-490a-972b-26ba692fe1af
+        logger.info("created UUID version -> {}", customerId.version()); // 4
+        customerRepository.instertCustomer(customerId, "new-user02", "new_user02@gmail.com");
 
 //        select
-        customerRepository.findAllName().forEach(v -> logger.info("Found name: {}", v));
+//        customerRepository.findAllName().forEach(v -> logger.info("Found name: {}", v));
+//        update
+//        customerRepository.updateCustomerName(customer2, "updated-user2");
+
+
+        customerRepository.findAllIds().forEach(v -> logger.info("Found customerId: {} and version: {}", v, v.version())); //849cbced-943f-3068-bc58-9a550aa41a18, 3
+//        SELECT BIN_TO_UUID(customer_id) from customers; #2fcd04d9-3ddb-490a-972b-26ba692fe1af
+//        값은 맞게 들어갔는데 조회가 이상하게 됨.
+//        만들땐 UUID 4, 조회할땐 UUID 3이라 값이 다름.
     }
 }
