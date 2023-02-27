@@ -29,6 +29,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!--JDBC-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+
 		<!--MySQL-->
 		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
