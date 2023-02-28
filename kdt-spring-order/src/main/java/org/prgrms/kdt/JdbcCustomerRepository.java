@@ -173,7 +173,6 @@ public class JdbcCustomerRepository {
         return 0;
     }
     public int deleteAllCustomers(){
-        List<String> names = new ArrayList<>();
         try (
                 var connection = DriverManager.getConnection("jdbc:mysql://localhost/order_mgmt", "root", "test1234@#");
                 var statement = connection.prepareStatement(DELETE_ALL_SQL);

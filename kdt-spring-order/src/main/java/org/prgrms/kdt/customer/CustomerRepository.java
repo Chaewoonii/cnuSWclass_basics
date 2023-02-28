@@ -10,11 +10,13 @@ public interface CustomerRepository {
 
     Customer update(Customer customer);
 
+    int count();
+
     List<Customer> findAll();
 
     Optional<Customer> findById(UUID customerId);
-    Optional<Customer> findByName(UUID customerId);
-    Optional<Customer> findByEmail(UUID customerId);
+    Optional<Customer> findByName(String name);
+    Optional<Customer> findByEmail(String email);
 
     void deleteAll();
 
