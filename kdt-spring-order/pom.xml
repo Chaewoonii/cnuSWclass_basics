@@ -43,6 +43,23 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!--h2-->
+		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+<!--		<dependency>-->
+<!--			<groupId>com.h2database</groupId>-->
+<!--			<artifactId>h2</artifactId>-->
+<!--			<scope>runtime</scope>-->
+<!--		</dependency>-->
+
+		<!--embedded mysql-->
+		<!-- https://mvnrepository.com/artifact/com.wix/wix-embedded-mysql -->
+		<dependency>
+			<groupId>com.wix</groupId>
+			<artifactId>wix-embedded-mysql</artifactId>
+			<version>4.6.1</version>
+			<scope>test</scope>
+		</dependency>
+
 
 	</dependencies>
 

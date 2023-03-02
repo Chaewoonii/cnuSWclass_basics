@@ -1,5 +1,6 @@
 package org.prgrms.kdt.customer;
 
+import com.wix.mysql.EmbeddedMysql;
 import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import javax.sql.DataSource;
@@ -17,6 +21,12 @@ import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
+
+import static com.wix.mysql.EmbeddedMysql.anEmbeddedMysql;
+import static com.wix.mysql.ScriptResolver.classPathScript;
+import static com.wix.mysql.distribution.Version.v5_7_latest;
+import static com.wix.mysql.config.MysqldConfig.aMysqldConfig;
+import static com.wix.mysql.config.Charset.UTF8;
 
 @SpringJUnitConfig
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class) //Order annotation 의 순서로 실행하겠다.
@@ -33,15 +43,29 @@ class CustomerJDBCRepositoryTest {
 //        .type(HikariDataSource):HikariDataSource 로 DataSource 를 만듦.
         @Bean
         public DataSource dataSource(){
+            /*
+            Embedded Database 의 필요성
+              - 테스트 시 DB 연결이 되지 않으면 테스트가 불가능한 상황 발생  >> DB 연결과 상관 없이 테스트를 수행하기 위해 필요.
+              - 테스트 시 실제 DB 와 연결되면 데이터 변경 및 삭제의 위험이 따름. >> 실제 DB와 연결하지 않고도 테스트 가능.
+            EmbeddedDatabase 는 DataSource 를 extends 하기 때문에 따로 datasource 를 만들지 않고 바로 return.
+            EmbeddedDatabase 를 이용할 경우, UUID_TO_BIN 에서 오류가 발생함. 특정 회사의 함수에 종속. sql 을 최대한 표준에 맞춰 작성하거나 Embedded Mysql 을 사용.*/
+//            return new EmbeddedDatabaseBuilder()
+//                    .generateUniqueName(true)
+//                    .setType(EmbeddedDatabaseType.H2)
+//                    .setScriptEncoding("UTF-8")
+//                    .ignoreFailedDrops(true)
+//                    .addScript("schema.sql")
+//                    .build();
+
             var dataSource = DataSourceBuilder.create()
-                    .url("jdbc:mysql://localhost/order_mgmt")
-                    .username("root")
-                    .password("test1234@#")
+                    .url("jdbc:mysql://localhost:2215/test-oder-mgmt")
+                    .username("test")
+                    .password("test1234!")
                     .type(HikariDataSource.class)
                     .build();
 //            아무 것도 지정하지 않으면 10개가 minimum 이자 maximum
-//            dataSource.setMinimumIdle(100); // connection pool 의 최소 connection 개수. 100개를 기본적으로 만들고 꺼내 쓰겠다.
-//            dataSource.setMaximumPoolSize(1000); // connection pool 의 최대 connection 개수
+            dataSource.setMaximumPoolSize(1000); // connection pool 의 최대 connection 개수
+            dataSource.setMinimumIdle(100); // connection pool 의 최소 connection 개수. 100개를 기본적으로 만들고 꺼내 쓰겠다.
             return dataSource;
         }
 
@@ -64,18 +88,38 @@ class CustomerJDBCRepositoryTest {
 
     Customer newCustomer;
 
+    EmbeddedMysql embeddedMysql;
+
     //테스트 시작 전 딱 한 번 실행
     @BeforeAll
     void setUp(){
         newCustomer = new Customer(UUID.randomUUID(), "testtest-user", "testtest-user@gmail.com", LocalDateTime.now());
-        customerJdbcRepository.deleteAll();
+//        customerJdbcRepository.deleteAll(); //테스트 시마다 DB를 새로 올리기 때문에 다시 deleteAll 할 필요가 없다.
+//
+        var mysqlConfig = aMysqldConfig(v5_7_latest)
+                .withCharset(UTF8)
+                .withPort(2215)
+                .withUser("test","test1234!")
+                .withTimeZone("Asia/Seoul")
+                .build();
+
+        embeddedMysql = anEmbeddedMysql(mysqlConfig)
+                .addSchema("test-oder-mgmt", classPathScript("schema.sql"))
+                .start();
+    }
+
+    @AfterAll
+    void cleanUp(){
+        embeddedMysql.stop();
     }
 
     @Test
     @Order(1) //test 실행 순서 지정
+//    @Disabled
     public void testHikariConnetionPool(){
         assertThat(dataSource.getClass().getName(), is("com.zaxxer.hikari.HikariDataSource"));
     }
+
 
     @Test
     @Order(2)
