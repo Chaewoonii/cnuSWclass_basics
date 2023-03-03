@@ -41,7 +41,7 @@ public class CustomerJDBCRepository implements CustomerRepository {
 
 
     @Override
-    public Customer insult(Customer customer) {
+    public Customer insert(Customer customer) {
         List<String> names = new ArrayList<>();
         try (
                 var connection = dataSource.getConnection();
@@ -192,6 +192,7 @@ public class CustomerJDBCRepository implements CustomerRepository {
             statement.executeUpdate();
         }catch (SQLException throwable){
             logger.error("Got error while closing connection", throwable);
+            throw new RuntimeException(throwable);
         }
     }
 }

@@ -8,15 +8,13 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import javax.sql.DataSource;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.*;
@@ -58,7 +56,7 @@ class CustomerJDBCRepositoryTest {
 //                    .build();
 
             var dataSource = DataSourceBuilder.create()
-                    .url("jdbc:mysql://localhost:2215/test-oder-mgmt")
+                    .url("jdbc:mysql://localhost:2215/test_order_mgmt")
                     .username("test")
                     .password("test1234!")
                     .type(HikariDataSource.class)
@@ -69,9 +67,19 @@ class CustomerJDBCRepositoryTest {
             return dataSource;
         }
 
-        @Bean
+/*        @Bean
         public JdbcTemplate jdbcTemplate(DataSource dataSource){
             return new JdbcTemplate(dataSource);
+        }
+
+        @Bean
+        public NamedParameterJdbcTemplate namedParameterJdbcTemplate(JdbcTemplate jdbcTemplate){
+            return new NamedParameterJdbcTemplate(jdbcTemplate);
+        }*/
+
+        @Bean
+        public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource){
+            return new NamedParameterJdbcTemplate(dataSource);
         }
     }
 
@@ -81,7 +89,7 @@ class CustomerJDBCRepositoryTest {
 
 
     @Autowired
-    CustomerJDBCTemplateRepository customerJdbcRepository;
+    CustomerNamedJdbcTemplateRepository customerJdbcRepository;
 
     @Autowired
     DataSource dataSource;
@@ -93,7 +101,7 @@ class CustomerJDBCRepositoryTest {
     //테스트 시작 전 딱 한 번 실행
     @BeforeAll
     void setUp(){
-        newCustomer = new Customer(UUID.randomUUID(), "testtest-user", "testtest-user@gmail.com", LocalDateTime.now());
+        newCustomer = new Customer(UUID.randomUUID(), "testtest-user", "testtest-user@gmail.com", LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
 //        customerJdbcRepository.deleteAll(); //테스트 시마다 DB를 새로 올리기 때문에 다시 deleteAll 할 필요가 없다.
 //
         var mysqlConfig = aMysqldConfig(v5_7_latest)
@@ -104,7 +112,7 @@ class CustomerJDBCRepositoryTest {
                 .build();
 
         embeddedMysql = anEmbeddedMysql(mysqlConfig)
-                .addSchema("test-oder-mgmt", classPathScript("schema.sql"))
+                .addSchema("test_order_mgmt", classPathScript("schema.sql"))
                 .start();
     }
 
@@ -124,12 +132,13 @@ class CustomerJDBCRepositoryTest {
     @Test
     @Order(2)
     @DisplayName("고객을 등록할 수 있다.")
-    public void testInsert() {
+    public void testInsult() {
 //        @BeforeAll 으로 옮김
 //        var newCustomer = new Customer(UUID.randomUUID(), "testtest-user", "testtest-user@gmail.com", LocalDateTime.now());
-        var result = customerJdbcRepository.insult(newCustomer);
+//        customerJdbcRepository.deleteAll();
+        var result = customerJdbcRepository.insert(newCustomer);
 
-        System.out.println("newCustomer Id => " + newCustomer.getCustomerId());
+//        System.out.println("newCustomer Id => " + newCustomer.getCustomerId());
         var retrievedCustomer = customerJdbcRepository.findById(newCustomer.getCustomerId());
         assertThat(retrievedCustomer.isEmpty(), is(false));
         assertThat(retrievedCustomer.get(), samePropertyValuesAs(newCustomer));
@@ -182,7 +191,7 @@ class CustomerJDBCRepositoryTest {
 
         var all = customerJdbcRepository.findAll();
         assertThat(all, hasSize(1));
-        assertThat(all, samePropertyValuesAs(newCustomer));
+        assertThat(all.get(0), samePropertyValuesAs(newCustomer));
 
         var retrivedCustomer = customerJdbcRepository.findById(newCustomer.getCustomerId());
         assertThat(retrivedCustomer.get(), samePropertyValuesAs(newCustomer));

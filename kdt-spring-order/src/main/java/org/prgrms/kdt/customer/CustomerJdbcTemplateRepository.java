@@ -12,22 +12,21 @@ import java.nio.ByteBuffer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 //JdbcTemplate을 이용
-@Repository
-public class CustomerJDBCTemplateRepository implements CustomerRepository {
+//@Repository
+public class CustomerJdbcTemplateRepository implements CustomerRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomerJDBCTemplateRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerJdbcTemplateRepository.class);
     private final DataSource dataSource;
 
     private final JdbcTemplate jdbcTemplate;
 
 
-    public CustomerJDBCTemplateRepository(DataSource dataSource, JdbcTemplate jdbcTemplate) {
+    public CustomerJdbcTemplateRepository(DataSource dataSource, JdbcTemplate jdbcTemplate) {
         this.dataSource = dataSource;
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -60,8 +59,8 @@ public class CustomerJDBCTemplateRepository implements CustomerRepository {
 
 
     @Override
-    public Customer insult(Customer customer) {
-        var update = jdbcTemplate.update("INSERT INTO customers(customer_id, name, email, created_at) VALUES (UUID_TO_BIN(?), ?, ?, ?)",
+    public Customer insert(Customer customer) {
+        var update = jdbcTemplate.update("INSERT INTO customers(customer_id, name, email, created_at) VALUES (UNHEX(REPLACE(?, '-', '')), ?, ?, ?)",
                 customer.getCustomerId().toString().getBytes(),
                 customer.getName(),
                 customer.getEmail(),

@@ -19,12 +19,12 @@ public class Customer {
         }
     }
 
-    public Customer(UUID customerId, String name, String email, LocalDateTime lastLoginAt) {
+    public Customer(UUID customerId, String name, String email, LocalDateTime createdAt) {
         validName(name);
         this.name = name;
         this.customerId = customerId;
         this.email = email;
-        this.lastLoginAt = lastLoginAt;
+        this.createdAt = createdAt;
     }
 
     public Customer(UUID customerId, String name, String email,
