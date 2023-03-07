@@ -3,11 +3,14 @@ package org.prgrms.kdt.customer;
 import com.wix.mysql.EmbeddedMysql;
 import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -31,13 +34,13 @@ import static com.wix.mysql.config.Charset.UTF8;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // test instance lifecycle은 클래스 당 하나임을 지정.
                                                 // -> 지정하지 않으면 clean을 할 때 static이어야 하는데(전부 지워야 하므로) 클래스당 하나로 지정하면 static 일 필요가 없음.
 class CustomerJDBCRepositoryTest {
+    private static final Logger logger = LoggerFactory.getLogger(CustomerJdbcTemplateRepository.class);
 
     @Configuration
     @ComponentScan(
             basePackages = {"org.prgrms.kdt.customer"}
     )
     static class Config{
-
 //        .type(HikariDataSource):HikariDataSource 로 DataSource 를 만듦.
         @Bean
         public DataSource dataSource(){
@@ -132,11 +135,17 @@ class CustomerJDBCRepositoryTest {
     @Test
     @Order(2)
     @DisplayName("고객을 등록할 수 있다.")
-    public void testInsult() {
+    public void testInsert() {
 //        @BeforeAll 으로 옮김
 //        var newCustomer = new Customer(UUID.randomUUID(), "testtest-user", "testtest-user@gmail.com", LocalDateTime.now());
 //        customerJdbcRepository.deleteAll();
-        var result = customerJdbcRepository.insert(newCustomer);
+
+        try{
+            customerJdbcRepository.insert(newCustomer);
+        }catch(BadSqlGrammarException e){
+            logger.error("Got BadSqlGrammarException error code -> {}",e.getSQLException().getErrorCode(), e);
+        }
+
 
 //        System.out.println("newCustomer Id => " + newCustomer.getCustomerId());
         var retrievedCustomer = customerJdbcRepository.findById(newCustomer.getCustomerId());
