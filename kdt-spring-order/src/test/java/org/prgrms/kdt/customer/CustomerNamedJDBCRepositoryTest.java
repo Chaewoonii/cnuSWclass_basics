@@ -11,29 +11,27 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.BadSqlGrammarException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import javax.sql.DataSource;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-
 import static com.wix.mysql.EmbeddedMysql.anEmbeddedMysql;
 import static com.wix.mysql.ScriptResolver.classPathScript;
-import static com.wix.mysql.distribution.Version.v5_7_latest;
-import static com.wix.mysql.config.MysqldConfig.aMysqldConfig;
 import static com.wix.mysql.config.Charset.UTF8;
+import static com.wix.mysql.config.MysqldConfig.aMysqldConfig;
+import static com.wix.mysql.distribution.Version.v5_7_latest;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @SpringJUnitConfig
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class) //Order annotation 의 순서로 실행하겠다.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // test instance lifecycle은 클래스 당 하나임을 지정.
                                                 // -> 지정하지 않으면 clean을 할 때 static이어야 하는데(전부 지워야 하므로) 클래스당 하나로 지정하면 static 일 필요가 없음.
-class CustomerJDBCRepositoryTest {
+class CustomerNamedJDBCRepositoryTest {
     private static final Logger logger = LoggerFactory.getLogger(CustomerJdbcTemplateRepository.class);
 
     @Configuration
@@ -41,22 +39,8 @@ class CustomerJDBCRepositoryTest {
             basePackages = {"org.prgrms.kdt.customer"}
     )
     static class Config{
-//        .type(HikariDataSource):HikariDataSource 로 DataSource 를 만듦.
         @Bean
         public DataSource dataSource(){
-            /*
-            Embedded Database 의 필요성
-              - 테스트 시 DB 연결이 되지 않으면 테스트가 불가능한 상황 발생  >> DB 연결과 상관 없이 테스트를 수행하기 위해 필요.
-              - 테스트 시 실제 DB 와 연결되면 데이터 변경 및 삭제의 위험이 따름. >> 실제 DB와 연결하지 않고도 테스트 가능.
-            EmbeddedDatabase 는 DataSource 를 extends 하기 때문에 따로 datasource 를 만들지 않고 바로 return.
-            EmbeddedDatabase 를 이용할 경우, UUID_TO_BIN 에서 오류가 발생함. 특정 회사의 함수에 종속. sql 을 최대한 표준에 맞춰 작성하거나 Embedded Mysql 을 사용.*/
-//            return new EmbeddedDatabaseBuilder()
-//                    .generateUniqueName(true)
-//                    .setType(EmbeddedDatabaseType.H2)
-//                    .setScriptEncoding("UTF-8")
-//                    .ignoreFailedDrops(true)
-//                    .addScript("schema.sql")
-//                    .build();
 
             var dataSource = DataSourceBuilder.create()
                     .url("jdbc:mysql://localhost:2215/test_order_mgmt")
@@ -64,35 +48,19 @@ class CustomerJDBCRepositoryTest {
                     .password("test1234!")
                     .type(HikariDataSource.class)
                     .build();
-//            아무 것도 지정하지 않으면 10개가 minimum 이자 maximum
-            dataSource.setMaximumPoolSize(1000); // connection pool 의 최대 connection 개수
-            dataSource.setMinimumIdle(100); // connection pool 의 최소 connection 개수. 100개를 기본적으로 만들고 꺼내 쓰겠다.
+            dataSource.setMaximumPoolSize(1000);
+            dataSource.setMinimumIdle(100);
             return dataSource;
-        }
-
-        @Bean
-        public JdbcTemplate jdbcTemplate(DataSource dataSource){
-            return new JdbcTemplate(dataSource);
-        }
-
-        @Bean
-        public CustomerJdbcTemplateRepository customerJdbcTemplateRepository(DataSource dataSource, JdbcTemplate jdbcTemplate){
-            return new CustomerJdbcTemplateRepository(dataSource, jdbcTemplate);
-        }
-
-/*        @Bean
-        public NamedParameterJdbcTemplate namedParameterJdbcTemplate(JdbcTemplate jdbcTemplate){
-            return new NamedParameterJdbcTemplate(jdbcTemplate);
         }
 
         @Bean
         public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource){
             return new NamedParameterJdbcTemplate(dataSource);
-        }*/
+        }
     }
 
     @Autowired
-    CustomerJdbcTemplateRepository customerJdbcRepository;
+    CustomerNamedJdbcTemplateRepository customerJdbcRepository;
 
     @Autowired
     DataSource dataSource;
@@ -101,12 +69,11 @@ class CustomerJDBCRepositoryTest {
 
     EmbeddedMysql embeddedMysql;
 
-    //테스트 시작 전 딱 한 번 실행
+
     @BeforeAll
     void setUp(){
         newCustomer = new Customer(UUID.randomUUID(), "testtest-user", "testtest-user@gmail.com", LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
-//        customerJdbcRepository.deleteAll(); //테스트 시마다 DB를 새로 올리기 때문에 다시 deleteAll 할 필요가 없다.
-//
+
         var mysqlConfig = aMysqldConfig(v5_7_latest)
                 .withCharset(UTF8)
                 .withPort(2215)
@@ -125,7 +92,7 @@ class CustomerJDBCRepositoryTest {
     }
 
     @Test
-    @Order(1) //test 실행 순서 지정
+    @Order(1)
 //    @Disabled
     public void testHikariConnetionPool(){
         assertThat(dataSource.getClass().getName(), is("com.zaxxer.hikari.HikariDataSource"));
@@ -136,22 +103,15 @@ class CustomerJDBCRepositoryTest {
     @Order(2)
     @DisplayName("고객을 등록할 수 있다.")
     public void testInsert() {
-//        @BeforeAll 으로 옮김
-//        var newCustomer = new Customer(UUID.randomUUID(), "testtest-user", "testtest-user@gmail.com", LocalDateTime.now());
-//        customerJdbcRepository.deleteAll();
-
         try{
             customerJdbcRepository.insert(newCustomer);
         }catch(BadSqlGrammarException e){
             logger.error("Got BadSqlGrammarException error code -> {}",e.getSQLException().getErrorCode(), e);
         }
 
-
-//        System.out.println("newCustomer Id => " + newCustomer.getCustomerId());
         var retrievedCustomer = customerJdbcRepository.findById(newCustomer.getCustomerId());
         assertThat(retrievedCustomer.isEmpty(), is(false));
         assertThat(retrievedCustomer.get(), samePropertyValuesAs(newCustomer));
-        //samePropertyValueAs: 두 객체가 같은지 비교해주는 메소드.
     }
 
     @Test
@@ -160,11 +120,7 @@ class CustomerJDBCRepositoryTest {
     public void testFindAll() throws InterruptedException {
         var customers = customerJdbcRepository.findAll();
         assertThat(customers.isEmpty(), is(false));
-        /*
-        Thread.sleep(15000);
-        show status like '%Threads%';
 
-         */
     }
 
     @Test
