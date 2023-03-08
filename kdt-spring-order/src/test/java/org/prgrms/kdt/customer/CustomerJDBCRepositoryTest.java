@@ -10,9 +10,13 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
 
@@ -83,6 +87,16 @@ class CustomerJDBCRepositoryTest {
         @Bean
         public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource){
             return new NamedParameterJdbcTemplate(dataSource);
+        }
+
+        @Bean
+        public PlatformTransactionManager platformTransactionManager(DataSource dataSource){
+            return new DataSourceTransactionManager(dataSource);
+        }
+
+        @Bean
+        public TransactionTemplate transactionTemplate(PlatformTransactionManager platformTransactionManager){
+            return new TransactionTemplate(platformTransactionManager);
         }
     }
 
@@ -204,6 +218,47 @@ class CustomerJDBCRepositoryTest {
 
         var retrivedCustomer = customerJdbcRepository.findById(newCustomer.getCustomerId());
         assertThat(retrivedCustomer.get(), samePropertyValuesAs(newCustomer));
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("트랜젝션 테스트")
+    public void testTransaction() {
+        /*
+        * testTransaction에서 이름 업데이트 후 이메일 업데이트.
+        * 이메일: 이미 존재하는 것으로 ->> update 실패.
+        * 이름은 변경할 수 있었지만 이메일 변경에서 실패했으므로, 트랜잭션이 보장되려면 아무 것도 변경되지 않아야 한다.
+        * 즉, insertedNewOne이 insert 후 이름과 이메일을 update를 해야하는데, 이메일 update에 실패하였으므로
+        * db에서 insertedNewOne의 id로 정보를 가져왔을 때, 이름이 변경되지 않아야 한다.
+        * 이름이 변경되었다면 이름과 이메일이 변경된 것이 아닌, 이름만 변경된 것이고, 트랜잭션이 보장되지 않은 것이기 때문이다.
+        * 아래의 예제에서는 다음과 같은 오류가 발생한다.
+        * Expected: same property values as Customer [createdAt: <2023-03-08T16:51:35.560>, customerId: <6f45666a-4d05-438e-b31d-59866c08a436>, email: "a@gmail.com", lastLoginAt: null, name: "a"]
+            but: name was "b"
+        * >>> 이름만 변경됨.
+        *
+        *
+        * */
+        var prevOne = customerJdbcRepository.findById(newCustomer.getCustomerId());
+        assertThat(prevOne.isEmpty(), is(false));
+
+        var newOne = new Customer(UUID.randomUUID(), "a", "a@gmail.com", LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+        var insertedNewOne = customerJdbcRepository.insert(newOne);
+
+        try {
+            // 이름 a -> b: (성공)
+            // 존재하는 이메일로 update 시도, error 발생 (실패)
+            customerJdbcRepository.testTransaction(new Customer(insertedNewOne.getCustomerId(),
+                    "b",
+                    prevOne.get().getEmail(),
+                    newOne.getCreatedAt()));
+        }catch (DataAccessException e){
+            logger.error("Got error when testing transaction", e);
+        }
+
+        // transaction: email update에 실패했으므로 이름이 변경되지 않아야함.
+        var mayBeNewOne = customerJdbcRepository.findById(insertedNewOne.getCustomerId());
+        assertThat(mayBeNewOne.isEmpty(), is(false));
+        assertThat(mayBeNewOne.get(), samePropertyValuesAs(newOne));
     }
 
 
