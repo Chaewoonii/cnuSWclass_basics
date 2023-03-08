@@ -2,13 +2,17 @@ package org.prgrms.kdt.customer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.sql.DataSource;
 import java.nio.ByteBuffer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,8 +29,13 @@ public class CustomerNamedJdbcTemplateRepository implements CustomerRepository {
     //NamedParameterJdbcTemplate 이 JdbcTemplate 을 들고있고 Named~ 가 이름 설정할 수 있도록 함.
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public CustomerNamedJdbcTemplateRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+//    private final PlatformTransactionManager transactionManager;
+//    transactionManager를 간단하게 쓸 수 있도록 하는 template
+    private final TransactionTemplate transactionTemplate;
+
+    public CustomerNamedJdbcTemplateRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, TransactionTemplate transactionTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.transactionTemplate = transactionTemplate;
     }
 
     static UUID toUUID(byte[] bytes) {
@@ -158,4 +167,33 @@ public class CustomerNamedJdbcTemplateRepository implements CustomerRepository {
         }
     }
 
+
+    //Transaction test
+    //TransactionManager 이용.
+   /* public void testTransaction(Customer customer){
+        var transaction = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        try{
+            namedParameterJdbcTemplate.update("UPDATE customers SET name=:name WHERE customer_id = UUID_TO_BIN(:customerId)", toParamMap(customer));
+            namedParameterJdbcTemplate.update("UPDATE customers SET email=:email WHERE customer_id = UUID_TO_BIN(:customerId)", toParamMap(customer));
+
+            //에러가 발생하지 않고 모두 성공했을 때 commit
+            transactionManager.commit(transaction);
+        }catch (DataAccessException e){
+            logger.error("Got error", e);
+
+            //에러 발생했을 경우 rollback
+            transactionManager.rollback(transaction);
+        }
+    }*/
+
+    //Transaction Template 이용
+    public void testTransaction(Customer customer){
+        transactionTemplate.execute(new TransactionCallbackWithoutResult(){
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                namedParameterJdbcTemplate.update("UPDATE customers SET name=:name WHERE customer_id = UUID_TO_BIN(:customerId)", toParamMap(customer));
+                namedParameterJdbcTemplate.update("UPDATE customers SET email=:email WHERE customer_id = UUID_TO_BIN(:customerId)", toParamMap(customer));
+            }
+        });
+    }
 }

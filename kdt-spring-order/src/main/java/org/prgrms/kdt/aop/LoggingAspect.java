@@ -3,6 +3,7 @@ package org.prgrms.kdt.aop;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -33,11 +34,19 @@ public class LoggingAspect {
     org.prgrms.kdt..*.*(long, ..): 모든 클래스의 메소드 중 첫 번째 인자를 long으로 받는 것
 
      */
-    @Around("execution(public * org.prgrms.kdt..*.*(..))")
+
+//    @Around("execution(org.prgrms.kdt..*.*(..))")
+//    @Around("org.prgrms.kdt.aop.CommonPointcut.repositoryInsertPointcut()")
+    @Around("@annotation(org.prgrms.kdt.aop.TrackTime)") //특정 annotation이 부여된 method에만 쓰겠당
     public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info("Before method called. {}", joinPoint.getSignature().toString());
+        var startTime = System.nanoTime(); // method 가 호출되고 반환될 때 까지의 시간
         var result = joinPoint.proceed();
-        log.info("After method called with result => {}", result);
+        var endTime = System.nanoTime() - startTime; // method 가 호출되고 반환될 때 까지의 시간
+        log.info("After method called with result => {} and time taken by {} nanoseconds", result, endTime);
         return result;
     }
+
+
+
 }
