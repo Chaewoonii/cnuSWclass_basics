@@ -75,7 +75,11 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!--Transaction Manager-->
+		<!--spring starter web module:: Servlet-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 
 	</dependencies>
 

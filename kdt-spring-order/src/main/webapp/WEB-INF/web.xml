@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+         http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+<!--    &lt;!&ndash;Add Servlet&ndash;&gt;
+    <servlet>
+        <servlet-name>test</servlet-name>
+        <servlet-class>org.prgrms.kdt.servlet.TestServlet</servlet-class>
+    </servlet>
+    &lt;!&ndash;Serbvlet Mapping: 모든 url 요청을 받겠다.&ndash;&gt;
+    <servlet-mapping>
+        <servlet-name>test</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>-->
+
+<!--    &lt;!&ndash;Add multi Servlet&ndash;&gt;
+    <servlet>
+        <servlet-name>order</servlet-name>
+        <servlet-class>org.prgrms.kdt.servlet.OrderServlet</servlet-class>
+    </servlet>
+    &lt;!&ndash;Serbvlet Mapping: /order로 들어오는 모든 url 요청을 받겠다.&ndash;&gt;
+    <servlet-mapping>
+        <servlet-name>order</servlet-name>
+        <url-pattern>/order/*</url-pattern>
+    </servlet-mapping>-->
+
+</web-app>

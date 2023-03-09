@@ -1,4 +1,4 @@
-package proxy;
+package org.prgrms.kdt.proxy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
