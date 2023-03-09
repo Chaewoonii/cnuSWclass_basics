@@ -30,12 +30,13 @@ public class CustomerNamedJdbcTemplateRepository implements CustomerRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 //    private final PlatformTransactionManager transactionManager;
-//    transactionManager를 간단하게 쓸 수 있도록 하는 template
-    private final TransactionTemplate transactionTemplate;
 
-    public CustomerNamedJdbcTemplateRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, TransactionTemplate transactionTemplate) {
+//    transactionManager를 간단하게 쓸 수 있도록 하는 template
+//    private final TransactionTemplate transactionTemplate;
+//     >>>>@Transactional 로 관리.
+
+    public CustomerNamedJdbcTemplateRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.transactionTemplate = transactionTemplate;
     }
 
     static UUID toUUID(byte[] bytes) {
@@ -187,13 +188,18 @@ public class CustomerNamedJdbcTemplateRepository implements CustomerRepository {
     }*/
 
     //Transaction Template 이용
-    public void testTransaction(Customer customer){
+/*    public void testTransaction(Customer customer){
         transactionTemplate.execute(new TransactionCallbackWithoutResult(){
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
                 namedParameterJdbcTemplate.update("UPDATE customers SET name=:name WHERE customer_id = UUID_TO_BIN(:customerId)", toParamMap(customer));
                 namedParameterJdbcTemplate.update("UPDATE customers SET email=:email WHERE customer_id = UUID_TO_BIN(:customerId)", toParamMap(customer));
             }
-        });
+        });*/
+
+    public void testTransaction(Customer customer){
+        namedParameterJdbcTemplate.update("UPDATE customers SET name=:name WHERE customer_id = UUID_TO_BIN(:customerId)", toParamMap(customer));
+        namedParameterJdbcTemplate.update("UPDATE customers SET email=:email WHERE customer_id = UUID_TO_BIN(:customerId)", toParamMap(customer));
     }
+
 }

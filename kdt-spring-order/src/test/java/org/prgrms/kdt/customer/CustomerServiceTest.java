@@ -11,8 +11,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
@@ -32,6 +35,8 @@ import static org.hamcrest.Matchers.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CustomerServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(CustomerJdbcTemplateRepository.class);
+
+
 
     @Configuration
     @ComponentScan(
@@ -53,8 +58,18 @@ class CustomerServiceTest {
         }
 
         @Bean
-        public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource){
-            return new NamedParameterJdbcTemplate(dataSource);
+        public JdbcTemplate jdbcTemaplate(DataSource dataSource){
+            return new JdbcTemplate(dataSource);
+        }
+
+        @Bean
+        public NamedParameterJdbcTemplate namedParameterJdbcTemplate(JdbcTemplate jdbcTemplate){
+            return new NamedParameterJdbcTemplate(jdbcTemplate);
+        }
+
+        @Bean
+        public TransactionTemplate transactionTemplate(PlatformTransactionManager platformTransactionManager){
+            return new TransactionTemplate(platformTransactionManager);
         }
 
         @Bean
@@ -68,10 +83,19 @@ class CustomerServiceTest {
         }
     }
 
-    static EmbeddedMysql embeddedMysql;
+    private static EmbeddedMysql embeddedMysql;
+
+    @Autowired
+    DataSource dataSource;
+    Customer newCustomer;
+    @Autowired
+    CustomerService customerService;
+
+    //    @Autowired //--> @Repository가 두개. 지정 귀찮으면 그냥 config에 bean으로 등록하기.
+    CustomerRepository customerRepository;
 
     @BeforeAll
-    void setUp(){
+    static void setUp(){
         var mysqlConfig = aMysqldConfig(v5_7_latest)
                 .withCharset(UTF8)
                 .withPort(2215)
@@ -89,11 +113,6 @@ class CustomerServiceTest {
         embeddedMysql.stop();
     }
 
-    @Autowired
-    CustomerService customerService;
-
-    @Autowired //--> @Repository가 두개. 지정 귀찮으면 그냥 config에 bean으로 등록하기.
-    CustomerRepository customerRepository;
 
     @Test
     @DisplayName("다건 추가 테스트")
@@ -104,7 +123,9 @@ class CustomerServiceTest {
         );
 
         customerService.createCustomers(customers);
-        assertThat()
+        var allCustomerRetrived = customerRepository.findAll();
+        assertThat(allCustomerRetrived.size(), is(2));
+        assertThat(allCustomerRetrived, containsInAnyOrder(samePropertyValuesAs(customers.get(0)), samePropertyValuesAs(customers.get(1))));
 
     }
 
