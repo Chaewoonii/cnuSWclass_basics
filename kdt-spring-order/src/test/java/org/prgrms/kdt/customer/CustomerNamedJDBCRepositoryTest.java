@@ -12,7 +12,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
@@ -56,6 +58,11 @@ class CustomerNamedJDBCRepositoryTest {
         @Bean
         public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource){
             return new NamedParameterJdbcTemplate(dataSource);
+        }
+
+        @Bean
+        public PlatformTransactionManager platformTransactionManager(DataSource dataSource){
+            return new DataSourceTransactionManager(dataSource);
         }
     }
 

@@ -13,12 +13,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
+import javax.xml.crypto.Data;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -64,6 +66,11 @@ class CustomerServiceTest {
         @Bean
         public NamedParameterJdbcTemplate namedParameterJdbcTemplate(JdbcTemplate jdbcTemplate){
             return new NamedParameterJdbcTemplate(jdbcTemplate);
+        }
+
+        @Bean
+        public PlatformTransactionManager platformTransactionManager(DataSource dataSource){
+            return new DataSourceTransactionManager(dataSource);
         }
 
         @Bean
