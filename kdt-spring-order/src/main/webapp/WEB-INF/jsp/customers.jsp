@@ -15,7 +15,7 @@
 <body class="container-fluid">
     <h1>KDT Spring App</h1>
     <p>The time on the server is <%--<%= request.getAttribute("serverTime")%>--%> ${serverTime} </p>
-    <img src="<c:url value="/resources/testImg.png"/>" class="img-fluid">
+    <img src="<c:url value='/resources/testImg.png'/>" class="img-fluid">
     <%--controller에서 return한 "serverTime"을 가져옴 >> model에 전달한 key값으로 가져온다.--%>
 <%--    <%
         for (int i = 0; i < 10; i++){

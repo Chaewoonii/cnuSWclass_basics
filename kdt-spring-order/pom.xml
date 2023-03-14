@@ -95,6 +95,24 @@
 			<version>3.0.1</version>
 		</dependency>-->
 
+		<!--Thymeleaf-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<!--HTTP Message Converter 동작 study-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.4.17</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
