@@ -1,5 +1,7 @@
 package org.prgrms.kdt.customer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +14,11 @@ import java.util.Map;
 import java.util.UUID;
 
 @Controller
+@CrossOrigin(origins = "*") // cross origin을 특정 controller에만 적용
 public class CustomerController {
 
     private final CustomerService customerService;
+    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
@@ -29,10 +33,17 @@ public class CustomerController {
 
     @GetMapping("api/v1/customers/{customerId}")
     @ResponseBody
+    @CrossOrigin(origins = "*") // cross origin을 특정 method에만 적용
     public ResponseEntity<Customer> findCustomer(@PathVariable("customerId")UUID customerId){
         var customer = customerService.getCustomer(customerId);
         return customer.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build()); // customer service로 부터 받은 값을 ResponseEntity에 전달
 //        return customer.map(ResponseEntity::ok).orElse(ResponseEntity.status(404).body(something~~));// status를 직접 지정하고 body를 전달
+    }
+    @PostMapping("api/v1/customers/{customerId}")
+    @ResponseBody
+    public CustomerDto saveCustomer(@PathVariable("customerId")UUID customerId, @RequestBody CustomerDto customerDto){
+        logger.info("Got customer save request {}", customerDto);
+        return customerDto;
     }
 
 //    @RequestMapping(value = "/customers", method = RequestMethod.GET)
