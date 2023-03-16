@@ -66,3 +66,8 @@ spring:
   thymeleaf:
     view-names: "views/*"
     prefix: "/WEB-INF/"
+
+#Embeded tomcat, server관련 설정
+server:
+  servlet:
+    context-path: kdt
