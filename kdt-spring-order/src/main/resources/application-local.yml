@@ -5,3 +5,9 @@ kdt:
     - a
   description: |-
     line 1
+
+#logging level 설정
+logging:
+  level:
+    org:
+      springframework: DEBUG

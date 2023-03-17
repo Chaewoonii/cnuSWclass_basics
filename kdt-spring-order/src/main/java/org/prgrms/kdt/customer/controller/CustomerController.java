@@ -1,22 +1,24 @@
-package org.prgrms.kdt.customer;
+package org.prgrms.kdt.customer.controller;
 
+import org.prgrms.kdt.customer.domain.Customer;
+import org.prgrms.kdt.customer.service.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Controller
 @CrossOrigin(origins = "*") // cross origin을 특정 controller에만 적용
 public class CustomerController {
 
+    @Autowired
     private final CustomerService customerService;
     private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
@@ -25,13 +27,13 @@ public class CustomerController {
     }
 
     //    @RequestMapping(value = "/customers", method = RequestMethod.GET)
-    @GetMapping("api/v1/customers")
+    @GetMapping("/api/v1/customers")
     @ResponseBody
     public List<Customer> findCustomers(){
         return customerService.getAllCustomers();
     }
 
-    @GetMapping("api/v1/customers/{customerId}")
+    @GetMapping("/api/v1/customers/{customerId}")
     @ResponseBody
     @CrossOrigin(origins = "*") // cross origin을 특정 method에만 적용
     public ResponseEntity<Customer> findCustomer(@PathVariable("customerId")UUID customerId){
@@ -39,7 +41,7 @@ public class CustomerController {
         return customer.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build()); // customer service로 부터 받은 값을 ResponseEntity에 전달
 //        return customer.map(ResponseEntity::ok).orElse(ResponseEntity.status(404).body(something~~));// status를 직접 지정하고 body를 전달
     }
-    @PostMapping("api/v1/customers/{customerId}")
+    @PostMapping("/api/v1/customers/{customerId}")
     @ResponseBody
     public CustomerDto saveCustomer(@PathVariable("customerId")UUID customerId, @RequestBody CustomerDto customerDto){
         logger.info("Got customer save request {}", customerDto);

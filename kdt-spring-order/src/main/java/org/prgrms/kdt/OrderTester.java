@@ -90,7 +90,7 @@ public class OrderTester {
 
         //리소스 가져오기
         //classpath에서 가져오라고 지정. classpath를 지정하지 않아도 default로 classpath에서 가져옴
-        var resource = applicationContext.getResource("classpath:application.yaml");
+        var resource = applicationContext.getResource("classpath:application.yml");
         System.out.println(MessageFormat.format("Resource -> {0}", resource.getClass().getCanonicalName())); //어떤 구현체를 가져오는지 확인
         //org.springframework.core.io.DefaultResourceLoader.ClassPathContextResource
         var file = resource.getFile(); //가져온 resource의 내용을 읽음

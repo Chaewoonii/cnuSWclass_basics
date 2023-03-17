@@ -1,4 +1,4 @@
-package org.prgrms.kdt.customer;
+package org.prgrms.kdt.customer.domain;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

@@ -1,11 +1,11 @@
-package org.prgrms.kdt.customer;
+package org.prgrms.kdt.customer.repository;
 
+import org.prgrms.kdt.customer.domain.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.nio.ByteBuffer;

@@ -25,8 +25,8 @@ import org.springframework.context.annotation.*;
 //@ComponentScan(basePackageClasses = {Order.class, Voucher.class}) //Order클래스가 속한 패키지, Voucher클래스가 속한 패키지를 기준으로 찾게 된다.
 //@ComponentScan(excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION)}) //제외할 패키지를 어노테이션으로 설정
 //@ComponentScan(excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = MemoryVoucherRepository.class)}} //제외할 Bean 지정
-//@PropertySource("application.yaml") //.properties 파일에 작성한 property를 연동
-@PropertySource(value = "application.yaml", factory = YamlPropertiesFactory.class) //Spring Boot는 yaml을 지원, Spring framework는 yaml을 지원하지 않음. factory를 만들어 전달해야함.
+//@PropertySource("application.yml") //.properties 파일에 작성한 property를 연동
+@PropertySource(value = "application.yml", factory = YamlPropertiesFactory.class) //Spring Boot는 yml을 지원, Spring framework는 yml을 지원하지 않음. factory를 만들어 전달해야함.
 @EnableConfigurationProperties //ConfigurationProperties: 스프링 부트에서부터 온 것임을 알려줌.
 public class AppConfiguration {
 

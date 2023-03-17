@@ -12,7 +12,7 @@ import java.util.List;
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
     //WebMvcConfigurer 관련 설정: @Configuration 이 붙은 클래스 혹은 @SpringBootApplication 에서 처리할 수 있다.
-    //@Configuration에 설정할 경우 @ComponentScan의 basePackage에 설정 클래스가 포함된 패키지를 추가해야 한다.
+    //혹은 실행 클래스의 @ComponentScan(basePackages={"org.prgrms.kdt.config"})
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**").allowedOrigins("*");

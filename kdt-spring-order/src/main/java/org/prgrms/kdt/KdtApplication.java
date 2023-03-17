@@ -18,8 +18,8 @@ import java.util.UUID;
 * - @ConfigurationProperties, @EnableConfigurationProperties 등 사용하는 property를 지정하지 않아도
 *   yaml 등 configuration property 를 사용할 수 있다.
 * - 별다른 설정 없이 외부 리소스를 가져오고 configuration을 정의(yaml)하는 부분의 설정을 가져올 수 있다
-* - AppConfiguration에 @PropertySource(value = "application.yaml", factory = YamlPropertiesFactory.class)를 설정하지 않아도
-*   SpringBoot는 기본적으로 yaml(properties)을 읽는다.(이름은 application.yaml, application.properties 이어야 함.)
+* - AppConfiguration에 @PropertySource(value = "application.yml", factory = YamlPropertiesFactory.class)를 설정하지 않아도
+*   SpringBoot는 기본적으로 yaml(properties)을 읽는다.(이름은 application.yml, application-no.properties 이어야 함.)
 *
 * COC(Conversion over Configuration)
 *   : 설정보다 관례를 중요시한다.
@@ -27,8 +27,8 @@ import java.util.UUID;
 * - 즉, 필요한 것만 정의하고 나머지는 best practice 를 따르면 application 구성을 잘 할 수 있다.
 * - 단순성을 확보하고 유연성을 잃어버리지 않는 장점이 있음.
  * */
-@SpringBootApplication //자동으로 yaml, configuration properties, 등 사용할 수 있음
-@ComponentScan(basePackages = {"org.prgrms.kdt.order","org.prgrms.kdt.voucher"}) //AppConfiguration 에서 가져옴
+//@SpringBootApplication //자동으로 yaml, configuration properties, 등 사용할 수 있음
+//@ComponentScan(basePackages = {"org.prgrms.kdt.order","org.prgrms.kdt.voucher"}) //AppConfiguration 에서 가져옴
 public class KdtApplication {
 	private static final Logger logger = LoggerFactory.getLogger(KdtApplication.class);
 
@@ -43,8 +43,8 @@ public class KdtApplication {
 		 - 또는 KdtApplication - Edit Configurations... - Program arguments에 --spring.profiles.active=local 로 지정할수도 있음
 
 		 - 여러 개의 파일로 나눌 경우: spring.config.activate.on-profile 은 필요 없음
-		 	application.yaml -> default로 적용됨
-		 	application-local.yaml
+		 	application.yml -> default로 적용됨
+		 	application-local.yml
 		 	application-dev.yaml
 
 		 - Repository 에 @Profile({"local", "default"})와 같이 여러 개로 지정할 수 있음

@@ -1,7 +1,8 @@
-package org.prgrms.kdt.customer;
+package org.prgrms.kdt.customer.controller;
+
+import org.prgrms.kdt.customer.domain.Customer;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 

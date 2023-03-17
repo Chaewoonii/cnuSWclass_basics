@@ -1,6 +1,6 @@
 package org.prgrms.kdt;
 
-import org.prgrms.kdt.customer.Customer;
+import org.prgrms.kdt.customer.domain.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

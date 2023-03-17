@@ -1,5 +1,8 @@
-package org.prgrms.kdt.customer;
+package org.prgrms.kdt.customer.service;
 
+import org.prgrms.kdt.customer.repository.CustomerRepository;
+import org.prgrms.kdt.customer.domain.Customer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,8 +13,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class CustomerServiceImpl implements CustomerService{
+public class CustomerServiceImpl implements CustomerService {
 
+    @Autowired
     private final CustomerRepository customerRepository;
 
     public CustomerServiceImpl(CustomerRepository customerRepository) {

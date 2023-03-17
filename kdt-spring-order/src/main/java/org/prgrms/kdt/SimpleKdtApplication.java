@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -18,7 +19,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "org.prgrms.kdt.customer")
+@PropertySource(value = "application.yml")
+@ComponentScan(basePackages = {"org.prgrms.kdt.customer", "org.prgrms.kdt.config"})
 public class SimpleKdtApplication implements WebMvcConfigurer {
 
     public static void main(String[] args) {
